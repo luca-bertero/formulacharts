@@ -53,7 +53,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
             onPressed: buttonActive ? () => context.goNamed('chart', pathParameters: {'year': '$yearChoosed', 'raceNumber': '$raceNameChoosed'}) : null,
-            child: const Text("Search!"),
+            child: const Text("Search"),
           ),
         )
       ],

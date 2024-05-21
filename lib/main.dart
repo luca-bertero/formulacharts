@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Formula 1 Chart',
+      title: 'Formula Chart',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: false,

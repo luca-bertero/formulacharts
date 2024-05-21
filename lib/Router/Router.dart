@@ -31,14 +31,14 @@ class Router{
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("Welcome to f1stat, the site that provides data and graphics on Formula 1 races.",
+                      child: Text("Welcome to Formula Charts, the site that offers detailed data and graphics on Formula 1 races.",
                       style: GoogleFonts.roboto(
                         fontSize: 16 ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("To begin with, select a year and a related race from the dropdown menus.",
+                      child: Text("To get started, please select a year and a related race from the dropdown menus.",
                       style: GoogleFonts.roboto(
                         fontSize: 16 ),
                       ),

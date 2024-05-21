@@ -35,7 +35,7 @@ bool _isMediumScreen(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('F1 chart'),
+        title: const Text('Formula Charts'),
       ),
       body: _isMediumScreen(context) 
         ? largeScreenWidget(roundName, tabBarTheme) : smallScreenWidget(roundName, tabBarTheme),
@@ -63,178 +63,171 @@ bool _isMediumScreen(BuildContext context) {
 
   Widget largeScreenWidget(AsyncValue<String> roundName, TabController tabBarTheme){
     return Row(
+      children: [
+        NavigationRail(
+          selectedIndex: indexBar,
+          labelType: NavigationRailLabelType.all,
+          onDestinationSelected: (i){
+            setState(() {
+              indexBar = i;
+              _scrollController.scrollToIndex(index: i);
+            });
+          },
+          destinations: const
+            [
+              NavigationRailDestination(icon: Icon(Icons.timeline), label: Text("Chart")),
+              NavigationRailDestination(icon: Icon(Icons.flag,), label: Text("Race\nResults")),
+              NavigationRailDestination(icon: Icon(Icons.emoji_events), label: Text("Championship\nStanding")),
+            ],
+          leading: IconButton(
+            onPressed: () => context.goNamed("home"),
+            icon: const Icon(Icons.home),
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            controller: _scrollController,
             children: [
-              NavigationRail(
-                selectedIndex: indexBar,
-                labelType: NavigationRailLabelType.all,
-                onDestinationSelected: (i){
-                  setState(() {
-                    indexBar = i;
-                    _scrollController.scrollToIndex(index: i);
-                  });
-                },
-                destinations: const
-                [
-                  NavigationRailDestination(icon: Icon(Icons.timeline), label: Text("Chart")),
-                  NavigationRailDestination(icon: Icon(Icons.flag,), label: Text("Race\nResults")),
-                  NavigationRailDestination(icon: Icon(Icons.emoji_events), label: Text("Championship\nStanding")),
-                ],
-                leading: 
-                  IconButton(
-                    onPressed: () => context.goNamed("home"),
-                    icon: const Icon(Icons.home),
-                  ),
-              ),
-              Expanded(
-                child: ListView(
-                  controller: _scrollController,
-                  children: [
-                    roundName.isLoading ? 
-                    const LinearProgressIndicator() :
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        roundName.value ?? "Race", 
-                        style: GoogleFonts.roboto(
-                          fontSize: 38
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AnchorItemWrapper(
-                        index: 0,
-                        controller: _scrollController,
-                        child: TabBar(
-                          labelColor: Colors.black,
-                          controller: tabBarTheme,
-                          tabs: const [
-                            Tab(text: 'Average LapTime'),
-                            Tab(text: 'By driver difference'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AnchorItemWrapper(
-                        index: 1,
-                        controller: _scrollController,
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.9,
-                          child: TabBarView(
-                            controller: tabBarTheme,
-                            children: [
-                            AverageLaptimeChart(year: widget.year, raceNumber: widget.raceNumber),
-                            DriverDifferenceLaptimeChart(year: widget.year, raceNumber: widget.raceNumber),
-                            ]
-                          ),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                    Expanded(
-                      child: AnchorItemWrapper(
-                        index: 2,
-                        controller: _scrollController,
-                        child: SizedBox( 
-                          height: MediaQuery.of(context).size.height * 1.3,
-                          //width: MediaQuery.of(context).size.width * 0.8,
-                          child: Column(
-                            children: [
-                              Text(
-                                "Race Results",
-                                style: GoogleFonts.roboto(
-                                  fontSize: 24
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Expanded(child: RaceResultView(year: widget.year, raceNumber: widget.raceNumber)),
-                            ],
-                          )
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: AnchorItemWrapper(
-                        index: 3,
-                        controller: _scrollController,
-                        child: SizedBox(                        
-                          height: MediaQuery.of(context).size.height * 1.3,
-                          //width: MediaQuery.of(context).size.width * 0.8,
-                          child: Column(
-                            children: [
-                              Text(
-                                "Championship Standing",
-                                style: GoogleFonts.roboto(
-                                  fontSize: 24
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Expanded(child: ChampionshipStanding(year: widget.year, round: widget.raceNumber)),
-                            ],
-                          )
-                        ),
-                      ),
-                    )
-                      ]
-                    )
-                  ],  
+              roundName.isLoading ? 
+              const LinearProgressIndicator() :
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  roundName.value ?? "Race", 
+                  style: GoogleFonts.roboto(fontSize: 38),
                 ),
               ),
-            ]
-          );
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AnchorItemWrapper(
+                  index: 0,
+                  controller: _scrollController,
+                  child: TabBar(
+                    labelColor: Colors.black,
+                    controller: tabBarTheme,
+                    tabs: const [
+                      Tab(text: 'Average LapTime'),
+                      Tab(text: 'By driver difference'),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AnchorItemWrapper(
+                  index: 1,
+                  controller: _scrollController,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.9,
+                    child: TabBarView(
+                      controller: tabBarTheme,
+                      children: [
+                        AverageLaptimeChart(year: widget.year, raceNumber: widget.raceNumber),
+                        DriverDifferenceLaptimeChart(year: widget.year, raceNumber: widget.raceNumber),
+                      ]
+                    ),
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: AnchorItemWrapper(
+                      index: 2,
+                      controller: _scrollController,
+                      child: SizedBox( 
+                        height: MediaQuery.of(context).size.height * 1.3,
+                        //width: MediaQuery.of(context).size.width * 0.8,
+                        child: Column(
+                          children: [
+                            Text(
+                              "Race Results",
+                              style: GoogleFonts.roboto(fontSize: 24),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Expanded(child: RaceResultView(year: widget.year, raceNumber: widget.raceNumber)),
+                          ],
+                        )
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: AnchorItemWrapper(
+                      index: 3,
+                      controller: _scrollController,
+                      child: SizedBox(                        
+                        height: MediaQuery.of(context).size.height * 1.3,
+                        //width: MediaQuery.of(context).size.width * 0.8,
+                        child: Column(
+                          children: [
+                            Text(
+                              "Championship Standing",
+                              style: GoogleFonts.roboto(fontSize: 24),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Expanded(child: ChampionshipStanding(year: widget.year, round: widget.raceNumber)),
+                          ],
+                        )
+                      ),
+                    ),
+                  )
+                ]
+              )
+            ],  
+          ),
+        ),
+      ]
+    );
   }
 
   Widget smallScreenWidget(AsyncValue<String> roundName, TabController tabBarTheme){
     return Row(
-          children: [
-            Expanded(
-              child: ListView(
-                controller: _scrollController,
-                children: [
-                  roundName.isLoading ? 
-                  const LinearProgressIndicator() :
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: AnchorItemWrapper(
-                      index: 0,
-                      controller: _scrollController,
-                      child: Text(
-                        roundName.value ?? "Race", 
-                        style: GoogleFonts.roboto(
-                          fontSize: 38
-                        ),
-                      ),
+      children: [
+        Expanded(
+          child: ListView(
+            controller: _scrollController,
+            children: [
+              roundName.isLoading ? 
+              const LinearProgressIndicator() :
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AnchorItemWrapper(
+                  index: 0,
+                  controller: _scrollController,
+                  child: Text(
+                    roundName.value ?? "Race", 
+                    style: GoogleFonts.roboto(
+                      fontSize: 38
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TabBar(
-                      labelColor: Colors.black,
-                      controller: tabBarTheme,
-                      tabs: const [
-                        Tab(text: 'Average LapTime'),
-                        Tab(text: 'By driver difference'),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.8,
-                      child: TabBarView(
-                        controller: tabBarTheme,
-                        children: [
-                        AverageLaptimeChart(year: widget.year, raceNumber: widget.raceNumber),
-                        DriverDifferenceLaptimeChart(year: widget.year, raceNumber: widget.raceNumber),
-                        ]
-                      ),
-                    ),
-                  ),
-                  Column(
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TabBar(
+                  labelColor: Colors.black,
+                  controller: tabBarTheme,
+                  tabs: const [
+                    Tab(text: 'Average LapTime'),
+                    Tab(text: 'By driver difference'),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child: TabBarView(
+                    controller: tabBarTheme,
                     children: [
+                      AverageLaptimeChart(year: widget.year, raceNumber: widget.raceNumber),
+                      DriverDifferenceLaptimeChart(year: widget.year, raceNumber: widget.raceNumber),
+                    ]
+                  ),
+                ),
+              ),
+              Column(
+                children: [
                   AnchorItemWrapper(
                     index: 1,
                     controller: _scrollController,
@@ -247,9 +240,7 @@ bool _isMediumScreen(BuildContext context) {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               "Race Results",
-                              style: GoogleFonts.roboto(
-                                fontSize: 24
-                              ),
+                              style: GoogleFonts.roboto(fontSize: 24),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -270,9 +261,7 @@ bool _isMediumScreen(BuildContext context) {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               "Championship Standing",
-                              style: GoogleFonts.roboto(
-                                fontSize: 24
-                              ),
+                              style: GoogleFonts.roboto(fontSize: 24),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -281,13 +270,12 @@ bool _isMediumScreen(BuildContext context) {
                       )
                     ),
                   )
-                    ]
-                  )
-                ],  
-              ),
-            ),
-            ]
-        );
-        
+                ]
+              )
+            ],  
+          ),
+        ),
+      ]
+    ); 
   }
 }

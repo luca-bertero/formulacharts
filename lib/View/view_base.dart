@@ -14,7 +14,7 @@ class _ViewBaseState extends State<ViewBase> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('F1 chart'),
+        title: const Text('Formula Charts'),
       ),
       body: widget.child,           
       floatingActionButton: getHelpFloatingActionButton(context),
